@@ -16,3 +16,18 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('filter','ApiController@filtres');
+
+Route::middleware('auth:api')->group(function (){
+
+    Route::get('liste_espace_default','ApiController@listeEspaceDefault');
+    Route::get('liste_montant','ApiController@listMontant');
+    Route::get('liste_commune','ApiController@listCommune');
+    Route::get('liste_categorie','ApiController@listCayegorie');
+    Route::get('liste_jours','ApiController@listJours');
+    Route::get('liste_espaces_sponsorring','ApiController@espaceSponsorisez');
+
+    Route::post('save_espace','ApiController@saveEspace');
+
+});
