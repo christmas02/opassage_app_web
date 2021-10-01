@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Commune;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -243,13 +244,60 @@ class ApiController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', 'Opération éffectué avec succès.');
+            $message = 'Opération éffectué avec succès.';
+
+            return response()->json(['statu' => 1, 'data' => $message]);
 
             
             //code...
         } catch (\Throwable $th) {
             dd($th);
             return redirect()->back()->with('danger', 'Error.');
+        }
+
+    }
+
+    public function registerAgent(Request $request){
+
+        try {
+            //code...
+            $user = new User;
+
+            $user->name = $request['name'];
+            $user->email = $request['email'];
+            $user->password =  Hash::make($request['password']);
+            $user->role = $request['role'];
+
+            if($user->save()){
+
+                $logo = $request->file('logo');
+
+                // traitement des image 
+                if($logo){
+                    $name_img = $logo->getClientOriginalName();
+                    Storage::disk('public')->put($name_img, file_get_contents($logo));
+                }else{
+                    $name_img = "default.jpg";
+                }
+
+                $hotel = new Hotel;
+
+                $hotel->id_user = $user->id;
+                $hotel->phone = $request->get('phone');
+                $hotel->name = $request->get('hotel');
+                $hotel->picture = $name_img;
+
+                $hotel->save();
+
+                $message = 'Opération éffectué avec succès.';
+                return response()->json(['statu' => 1, 'data' => $message]);
+
+            }
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th );
         }
 
     }

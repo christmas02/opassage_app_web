@@ -29,5 +29,6 @@ Route::middleware('auth:api')->group(function (){
     Route::get('liste_espaces_sponsorring','ApiController@espaceSponsorisez');
 
     Route::post('save_espace','ApiController@saveEspace');
+    Route::post('save_agent_hotel','ApiController@registerAgent');
 
 });
